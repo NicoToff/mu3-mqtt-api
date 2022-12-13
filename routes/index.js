@@ -3,7 +3,8 @@ var router = express.Router();
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-    res.send({ title: "Express" });
+    res.set("Access-Control-Allow-Origin", "*");
+    res.json({ root: "/", mqtt: "/api" });
 });
 
 module.exports = router;
