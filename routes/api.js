@@ -26,13 +26,11 @@ mqtt.on("connect", () => {
 
 const map = new Map();
 mqtt.on("message", (topic, message) => {
-    // console.log(`${topic}: ${message}`);
-    map.set(topic, message.toString());
+    map.set(topic, `${message.toString()};;${Date.now()}`);
 });
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
-    // Make a JSON array from the map
     const json = jsonify(map);
     res.set("Access-Control-Allow-Origin", "*"); // Sets Access-Control-Allow-Origin response header
     res.status(200).json(json);
