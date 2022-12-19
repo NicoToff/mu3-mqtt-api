@@ -7,11 +7,13 @@
         "dev": "nodemon ./bin/www -e js,json"
     },
     "dependencies": {
+        "@prisma/client": "^4.7.1",
         "cookie-parser": "~1.4.6",
         "debug": "~4.3.4",
         "express": "~4.18.2",
         "http-errors": "~1.6.3",
         "morgan": "~1.10.0",
-        "mqtt": "^4.3.7"
+        "mqtt": "^4.3.7",
+        "prisma": "^4.7.1"
     }
 }

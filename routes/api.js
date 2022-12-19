@@ -1,6 +1,8 @@
 var express = require("express");
 var router = express.Router();
 
+const prisma = require("../prisma/prisma");
+
 const mqttDomain = "178.32.223.217";
 const port = 80;
 const mqttUri = `mqtt://${mqttDomain}`;
@@ -25,8 +27,31 @@ mqtt.on("connect", () => {
 });
 
 const map = new Map();
-mqtt.on("message", (topic, message) => {
-    map.set(topic, `${message.toString()};;${Date.now()}`);
+// TODO: Fetch from DB before upserting
+mqtt.on("message", async (topic, message) => {
+    const name = topic.replace("/groupe2/", "");
+    const value = message.toString();
+
+    console.log(`Received message on ${topic}: ${value}`);
+    map.set(topic, `${value};;${Date.now()}`);
+    const lastUpdate = new Date();
+    // Wait a random time to avoid overloading the database
+    await new Promise(resolve => setTimeout(resolve, Math.random() * 10000));
+    const sent = await prisma.tag.upsert({
+        where: {
+            name,
+        },
+        create: {
+            name,
+            value,
+            lastUpdate,
+        },
+        update: {
+            value,
+            lastUpdate,
+        },
+    });
+    console.log(`Sent to database: ${JSON.stringify(sent)}`);
 });
 
 /* GET users listing. */
